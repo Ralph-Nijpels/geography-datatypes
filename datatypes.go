@@ -19,22 +19,22 @@ func ISOCountryCode(s string, partial bool, empty bool) (string, error) {
 	for _, c := range s {
 		if !unicode.IsSpace(c) {
 			if !unicode.IsLetter(c) {
-				return "", fmt.Errorf("Invalid ISO Country Code")
+				return "", fmt.Errorf("invalid ISO Country Code")
 			}
 			result.WriteRune(unicode.ToUpper(c))
 		}
 	}
 	// Empty
 	if result.Len() == 0 && !empty {
-		return "", fmt.Errorf("Invalid ISO Country Code")
+		return "", fmt.Errorf("invalid ISO Country Code")
 	}
 	// Too short
 	if result.Len() > 0 && result.Len() < 2 && !partial {
-		return "", fmt.Errorf("Invalid ISO Country Code")
+		return "", fmt.Errorf("invalid ISO Country Code")
 	}
 	// Too long
 	if result.Len() > 2 {
-		return "", fmt.Errorf("Invalid ISO Country Code")
+		return "", fmt.Errorf("invalid ISO Country Code")
 	}
 	return result.String(), nil
 }
@@ -47,14 +47,14 @@ func ISORegionCode(s string, partial bool, empty bool) (string, error) {
 	for _, c := range s {
 		if !unicode.IsSpace(c) {
 			if !unicode.In(c, unicode.Letter, unicode.Digit, unicode.Pc, unicode.Pd) {
-				return "", fmt.Errorf("Invalid ISO Region Code")
+				return "", fmt.Errorf("invalid ISO Region Code")
 			}
 			result.WriteRune(unicode.ToUpper(c))
 		}
 	}
 	// Empty
 	if result.Len() == 0 && !empty {
-		return "", fmt.Errorf("Invalid ISO Region Code")
+		return "", fmt.Errorf("invalid ISO Region Code")
 	}
 	// I don't know the length ranges of an ISO Region Code
 	// so it is untested for now (just empty is no good)
@@ -68,22 +68,22 @@ func ICAOAirportCode(s string, partial bool, empty bool) (string, error) {
 	for _, c := range s {
 		if !unicode.IsSpace(c) {
 			if !unicode.IsDigit(c) && !unicode.IsLetter(c) {
-				return "", fmt.Errorf("Invalid ICAO Airport Code")
+				return "", fmt.Errorf("invalid ICAO Airport Code")
 			}
 			result.WriteRune(unicode.ToUpper(c))
 		}
 	}
 	// Empty
 	if result.Len() == 0 && !empty {
-		return "", fmt.Errorf("Invalid ICAO Airport Code")
+		return "", fmt.Errorf("invalid ICAO Airport Code")
 	}
 	// Short
 	if result.Len() > 0 && result.Len() < 2 && !partial {
-		return "", fmt.Errorf("Invalid ICAO Airport Code")
+		return "", fmt.Errorf("invalid ICAO Airport Code")
 	}
 	// Long
 	if result.Len() > 4 {
-		return "", fmt.Errorf("Invalid ICAO Airport Code")
+		return "", fmt.Errorf("invalid ICAO Airport Code")
 	}
 	return result.String(), nil
 }
@@ -95,22 +95,22 @@ func IATAAirportCode(s string, partial bool, empty bool) (string, error) {
 	for _, c := range s {
 		if !unicode.IsSpace(c) {
 			if !unicode.IsLetter(c) {
-				return "", fmt.Errorf("Invalid IATA Airport Code")
+				return "", fmt.Errorf("invalid IATA Airport Code")
 			}
 			result.WriteRune(unicode.ToUpper(c))
 		}
 	}
 	// Empty
 	if result.Len() == 0 && !empty {
-		return "", fmt.Errorf("Invalid IATA Airport Code")
+		return "", fmt.Errorf("invalid IATA Airport Code")
 	}
 	// Short
 	if result.Len() > 0 && result.Len() < 3 && !partial {
-		return "", fmt.Errorf("Invalid IATA Airport Code")
+		return "", fmt.Errorf("invalid IATA Airport Code")
 	}
 	// Long
 	if result.Len() > 3 {
-		return "", fmt.Errorf("Invalid IATA Airport Code")
+		return "", fmt.Errorf("invalid IATA Airport Code")
 	}
 	return result.String(), nil
 }
@@ -122,14 +122,14 @@ func RunwayCode(s string, partial bool, empty bool) (string, error) {
 	for _, c := range s {
 		if !unicode.IsSpace(c) {
 			if !unicode.In(c, unicode.Letter, unicode.Digit, unicode.Pc, unicode.Pd) {
-				return "", fmt.Errorf("Invalid Runway Code")
+				return "", fmt.Errorf("invalid Runway Code")
 			}
 			result.WriteRune(unicode.ToUpper(c))
 		}
 	}
 	// Empty
 	if len(s) == 0 && !empty {
-		return "", fmt.Errorf("Invalid Runway Code")
+		return "", fmt.Errorf("invalid Runway Code")
 	}
 	// No maximum length known, so we also don't know how to define 'partial'
 	return result.String(), nil
@@ -140,20 +140,20 @@ func RunwayLength(s string, empty bool) (int, error) {
 	text := strings.TrimSpace(s)
 	if len(text) == 0 {
 		if !empty {
-			return 0, fmt.Errorf("Invalid Runway Length")
+			return 0, fmt.Errorf("invalid Runway Length")
 		}
 		return 0, nil
 	}
 
 	value, err := strconv.ParseFloat(text, 32)
 	if err != nil {
-		return 0, fmt.Errorf("Invalid Runway Length")
+		return 0, fmt.Errorf("invalid Runway Length")
 	}
 
 	// Check between 1ft and 30000ft (roughly 10KM)
 	length := int(value)
 	if length <= 0 || (length == 0 && !empty) || length > 30000 {
-		return 0, fmt.Errorf("Invalid Runway Length")
+		return 0, fmt.Errorf("invalid Runway Length")
 	}
 	return length, nil
 }
@@ -164,7 +164,7 @@ func RunwayWidth(s string, empty bool) (int, error) {
 	text := strings.TrimSpace(s)
 	if len(text) == 0 {
 		if !empty {
-			return 0, fmt.Errorf("Invalid Runway Width")
+			return 0, fmt.Errorf("invalid Runway Width")
 		}
 		return 0, nil
 	}
@@ -172,13 +172,13 @@ func RunwayWidth(s string, empty bool) (int, error) {
 	// Extract number
 	value, err := strconv.ParseFloat(text, 32)
 	if err != nil {
-		return 0, fmt.Errorf("Invalid Runway Width")
+		return 0, fmt.Errorf("invalid Runway Width")
 	}
 
 	// Check between 0 and 30000ft (roughly 10KM)
 	width := int(value)
 	if width < 0 || (width == 0 && !empty) || width > 30000 {
-		return 0, fmt.Errorf("Invalid Runway Width")
+		return 0, fmt.Errorf("invalid Runway Width")
 	}
 	return width, nil
 }
@@ -189,7 +189,7 @@ func RunwayLighted(s string, empty bool) (bool, error) {
 	text := strings.TrimSpace(s)
 	if len(text) == 0 {
 		if !empty {
-			return false, fmt.Errorf("Invalid Runway Lighted")
+			return false, fmt.Errorf("invalid Runway Lighted")
 		}
 		return false, nil
 	}
@@ -202,7 +202,7 @@ func RunwayLighted(s string, empty bool) (bool, error) {
 		return false, nil
 	}
 
-	return false, fmt.Errorf("Invalid Runway Lighted")
+	return false, fmt.Errorf("invalid Runway Lighted")
 }
 
 // RunwayClosed converts a string to a valid Lighed flag
@@ -211,7 +211,7 @@ func RunwayClosed(s string, empty bool) (bool, error) {
 	text := strings.TrimSpace(s)
 	if len(text) == 0 {
 		if !empty {
-			return false, fmt.Errorf("Invalid Runway Closed")
+			return false, fmt.Errorf("invalid Runway Closed")
 		}
 		return false, nil
 	}
@@ -224,7 +224,7 @@ func RunwayClosed(s string, empty bool) (bool, error) {
 		return false, nil
 	}
 
-	return false, fmt.Errorf("Invalid Runway Closed")
+	return false, fmt.Errorf("invalid Runway Closed")
 }
 
 // RunwayHeading converts a string to a valid Runway Heading in degrees
@@ -233,7 +233,7 @@ func RunwayHeading(s string, empty bool) (int, error) {
 	text := strings.TrimSpace(s)
 	if len(text) == 0 {
 		if !empty {
-			return 0, fmt.Errorf("Invalid Runway Heading")
+			return 0, fmt.Errorf("invalid Runway Heading")
 		}
 		return 0, nil
 	}
@@ -241,13 +241,13 @@ func RunwayHeading(s string, empty bool) (int, error) {
 	// Extract number
 	value, err := strconv.ParseFloat(text, 64)
 	if err != nil {
-		return 0, fmt.Errorf("Invalid Runway Heading")
+		return 0, fmt.Errorf("invalid Runway Heading")
 	}
 
 	// Heading must be between 0 and 360 inclusive
 	heading := int(value)
 	if heading < 0 || heading > 360 {
-		return 0, fmt.Errorf("Invalid Runway Heading")
+		return 0, fmt.Errorf("invalid Runway Heading")
 	}
 
 	return heading, nil
@@ -259,7 +259,7 @@ func RunwayThreshold(s string, empty bool) (int, error) {
 	text := strings.TrimSpace(s)
 	if len(text) == 0 {
 		if !empty {
-			return 0, fmt.Errorf("Invalid Runway Heading")
+			return 0, fmt.Errorf("invalid Runway Heading")
 		}
 		return 0, nil
 	}
@@ -267,13 +267,13 @@ func RunwayThreshold(s string, empty bool) (int, error) {
 	// Extract number
 	value, err := strconv.ParseFloat(text, 64)
 	if err != nil {
-		return 0, fmt.Errorf("Invalid Runway Threshold")
+		return 0, fmt.Errorf("invalid Runway Threshold")
 	}
 
 	// Must be between 0 and 30000ft (10KM)
 	threshold := int(value)
 	if threshold < 0 || threshold > 30000 {
-		return 0, fmt.Errorf("Invalid Runway Threshold")
+		return 0, fmt.Errorf("invalid Runway Threshold")
 	}
 
 	return threshold, nil
@@ -285,7 +285,7 @@ func Latitude(s string, empty bool) (float64, error) {
 	text := strings.TrimSpace(s)
 	if len(text) == 0 {
 		if !empty {
-			return 0.0, fmt.Errorf("Invalid Latitude")
+			return 0.0, fmt.Errorf("invalid Latitude")
 		}
 		return 0.0, nil
 	}
@@ -293,12 +293,12 @@ func Latitude(s string, empty bool) (float64, error) {
 	// Extract number
 	latitude, err := strconv.ParseFloat(text, 64)
 	if err != nil {
-		return 0.0, fmt.Errorf("Invalid Latitude")
+		return 0.0, fmt.Errorf("invalid Latitude")
 	}
 
 	// Must be between -90deg and +90deg
 	if latitude < -90.0 || latitude > 90.0 {
-		return 0.0, fmt.Errorf("Invalid Latitude")
+		return 0.0, fmt.Errorf("invalid Latitude")
 	}
 
 	return latitude, nil
@@ -310,7 +310,7 @@ func Longitude(s string, empty bool) (float64, error) {
 	text := strings.TrimSpace(s)
 	if len(text) == 0 {
 		if !empty {
-			return 0.0, fmt.Errorf("Invalid Longitude")
+			return 0.0, fmt.Errorf("invalid Longitude")
 		}
 		return 0.0, nil
 	}
@@ -318,12 +318,12 @@ func Longitude(s string, empty bool) (float64, error) {
 	// Extract number
 	longitude, err := strconv.ParseFloat(text, 64)
 	if err != nil {
-		return 0.0, fmt.Errorf("Invalid Longitude")
+		return 0.0, fmt.Errorf("invalid Longitude")
 	}
 
 	// Must be between -180deg and +180deg
 	if longitude < -180.0 || longitude > 180.0 {
-		return 0.0, fmt.Errorf("Invalid Longitude")
+		return 0.0, fmt.Errorf("invalid Longitude")
 	}
 
 	return longitude, nil
@@ -335,7 +335,7 @@ func Elevation(s string, empty bool) (int, error) {
 	text := strings.TrimSpace(s)
 	if len(text) == 0 {
 		if !empty {
-			return 0, fmt.Errorf("Invalid Elevation")
+			return 0, fmt.Errorf("invalid Elevation")
 		}
 		return 0, nil
 	}
@@ -343,13 +343,13 @@ func Elevation(s string, empty bool) (int, error) {
 	// Extract number
 	value, err := strconv.ParseFloat(text, 64)
 	if err != nil {
-		return 0, fmt.Errorf("Invalid Elevation")
+		return 0, fmt.Errorf("invalid Elevation")
 	}
 
 	// Must be between -45000 (15KM deep)  and 30000ft (10KM high)
 	elevation := int(value)
 	if elevation < -45000 || elevation > 30000 {
-		return 0, fmt.Errorf("Invalid Elevatino")
+		return 0, fmt.Errorf("invalid Elevation")
 	}
 
 	return elevation, nil
@@ -361,7 +361,7 @@ func Frequency(s string, empty bool) (float64, error) {
 	text := strings.TrimSpace(s)
 	if len(text) == 0 {
 		if !empty {
-			return 0.0, fmt.Errorf("Invalid Frequency")
+			return 0.0, fmt.Errorf("invalid Frequency")
 		}
 		return 0.0, nil
 	}
@@ -369,12 +369,12 @@ func Frequency(s string, empty bool) (float64, error) {
 	// Extract number
 	frequency, err := strconv.ParseFloat(text, 64)
 	if err != nil {
-		return 0.0, fmt.Errorf("Invalid Frequency")
+		return 0.0, fmt.Errorf("invalid Frequency")
 	}
 
 	// Must be between 118.0 and 137.0MHz (Civil aircraft communications band)
 	if frequency < 118.0 || frequency > 137.0 {
-		return 0.0, fmt.Errorf("Invalid Frequency")
+		return 0.0, fmt.Errorf("invalid Frequency")
 	}
 
 	return frequency, nil
